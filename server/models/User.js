@@ -16,8 +16,11 @@ const User = sequelize.define('User', {
         allowNull: false,
     },
     role: {
-        type: DataTypes.ENUM('Doctor', 'Nurse'),
+        type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            isIn: [['Doctor', 'Nurse']]
+        }
     },
 });
 

@@ -103,7 +103,7 @@ const Dashboard = () => {
                                             'border-red-500 animate-pulse'
                                     }`}>
                                     <img
-                                        src={patient.photo ? `http://localhost:3001${patient.photo}` : `https://ui-avatars.com/api/?name=${patient.name}&background=random`}
+                                        src={patient.photo ? `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${patient.photo}` : `https://ui-avatars.com/api/?name=${patient.name}&background=random`}
                                         alt={patient.name}
                                         className="w-full h-full rounded-full object-cover"
                                         onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${patient.name}&background=random` }}

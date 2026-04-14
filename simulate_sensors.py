@@ -6,6 +6,7 @@ import urllib.error
 
 # CONFIGURATION
 # Replace with your local IP if testing from another device, or keep localhost if on same machine
+# For testing against production: BASE_URL = "https://your-backend.onrender.com/api/telemetry"
 BASE_URL = "http://localhost:3001/api/telemetry" 
 PATIENT_ID = "P-101"
 

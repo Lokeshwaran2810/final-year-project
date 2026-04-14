@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -13,14 +14,17 @@ const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
 const io = new Server(server, {
     cors: {
-        origin: "*", // Allow all for dev
-        methods: ["GET", "POST"]
+        origin: FRONTEND_URL, 
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        transports: ['websocket', 'polling'] // Ensure compatibility
     }
 });
 
-app.use(cors());
+app.use(cors({ origin: FRONTEND_URL }));
 app.use(express.json());
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -47,7 +51,7 @@ const upload = multer({
     limits: { fileSize: 2 * 1024 * 1024 } // 2MB limit
 });
 
-const SECRET_KEY = "monitoring-secret-key-dev";
+const SECRET_KEY = process.env.JWT_SECRET || "monitoring-secret-key-dev";
 
 // --- Database Sync & Seed ---
 const seedData = async () => {
@@ -261,6 +265,7 @@ setInterval(async () => {
     }
 }, 2000);
 
-server.listen(3001, () => {
-    console.log('Server running on port 3001');
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

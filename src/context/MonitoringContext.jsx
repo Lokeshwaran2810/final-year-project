@@ -24,7 +24,11 @@ export const MonitoringProvider = ({ children }) => {
             loadPatients();
 
             // Connect Socket
-            const newSocket = io('http://localhost:3001');
+            const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const newSocket = io(socketUrl, {
+                transports: ['websocket'],
+                upgrade: false,
+            });
             setSocket(newSocket);
 
             return () => newSocket.close();

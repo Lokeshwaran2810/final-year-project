@@ -56,8 +56,11 @@ const Patient = sequelize.define('Patient', {
         defaultValue: 0,
     },
     status: {
-        type: DataTypes.ENUM('Normal', 'Warning', 'Critical', 'Completed'),
+        type: DataTypes.STRING,
         defaultValue: 'Normal',
+        validate: {
+            isIn: [['Normal', 'Warning', 'Critical', 'Completed']]
+        }
     },
     photo: {
         type: DataTypes.STRING, // path to uploaded file

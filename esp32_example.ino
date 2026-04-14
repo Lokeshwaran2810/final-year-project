@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
-#include <HTTPClient.h> // Added for backend telemetry integration
+#include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <Wire.h>
@@ -30,7 +31,7 @@
 /* ---------------- BACKEND INTEGRATION ---------------- */
 // IP Address of the machine running your Node.js backend
 // Update this if your computer's local IP address changes!
-const char* serverUrl = "http://10.217.102.136:3001/api/telemetry"; 
+const char* serverUrl = "https://your-backend.onrender.com/api/telemetry"; 
 const char* patientId = "P-101"; // ID representing Jai Adithia's live sensors profile
 
 unsigned long lastTelemetryPost = 0;
@@ -226,8 +227,11 @@ void loop(){
   // Fire off telemetry to our central server exactly as React expects for 'Jai Adithia'
   if (millis() - lastTelemetryPost >= telemetryInterval) {
     if(WiFi.status() == WL_CONNECTED) {
+      WiFiClientSecure client;
+      client.setInsecure(); // Bypass SSL verification for demo
+      
       HTTPClient http;
-      http.begin(serverUrl);
+      http.begin(client, serverUrl);
       http.addHeader("Content-Type", "application/json");
 
       uint32_t countCopy;
